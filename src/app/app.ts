@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import * as THREE from 'three';
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,7 @@ export class App implements AfterViewInit {
   private scene!: THREE.Scene;
   private camera!: THREE.PerspectiveCamera;
   private renderer!: THREE.WebGLRenderer;
-  private cube!: THREE.Mesh;
+  private controls!: OrbitControls;
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -61,12 +62,12 @@ export class App implements AfterViewInit {
         const center = box.getCenter(new THREE.Vector3());
         model.position.sub(center);
         const maxDim = Math.max(size.x, size.y, size.z);
-        const fov = this.camera.fov * (Math.PI / 180);
-        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-        cameraZ *= 1.5;
-        this.camera.position.set(0, 0, cameraZ);
-        this.camera.lookAt(0, 0, 0);
-        this.camera.updateProjectionMatrix();
+        this.controls.target.set(0, 0, 0);
+        const distance = maxDim * 1.2;
+        this.camera.position.set(0, 0, distance);
+        this.controls.minDistance = maxDim * 0.3;
+        this.controls.maxDistance = maxDim * 10;
+        this.controls.update();
         console.log('Model loaded from file');
       },
       undefined,
@@ -88,22 +89,34 @@ export class App implements AfterViewInit {
     this.scene.background = new THREE.Color(0x0f172a);
     const width: number = container.clientWidth;
     const height: number = container.clientHeight;
+
     this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     this.camera.position.z = 5;
+
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setSize(width, height);
     container.appendChild(this.renderer.domElement);
+
+    this.controls = new OrbitControls(
+      this.camera,
+      this.renderer.domElement
+    );
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.05;
+    this.controls.enablePan = true;
+    this.controls.enableZoom = true;
+    this.controls.minDistance = 1;
+    this.controls.maxDistance = 100;
+
     const geometry: THREE.BoxGeometry = new THREE.BoxGeometry();
     const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
     const cube: THREE.Mesh = new THREE.Mesh(geometry, material);
     this.scene.add(cube);
-    this.cube = cube;
   }
 
   private animate = () => {
     requestAnimationFrame(this.animate);
-    this.cube.rotation.x += 0.01;
-    this.cube.rotation.y += 0.01;
+    this.controls.update();
     this.renderer.render(this.scene, this.camera);
   };
 }
