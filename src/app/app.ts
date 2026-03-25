@@ -1,12 +1,17 @@
-import { Component, signal } from '@angular/core';
+import { Component, ElementRef, signal, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('3D-Demo');
+  @ViewChild('sceneContainer', { static: true })
+  sceneContainer!: ElementRef<HTMLDivElement>;
+
+  ngAfterViewInit(): void {
+    const container = this.sceneContainer.nativeElement;
+    console.log('Scene container ready:', container);
+  }
 }
