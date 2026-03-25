@@ -4,11 +4,19 @@
   </header>
   <main class="main">
     <div class="scene-container" #sceneContainer>
-      <!-- Three.js scene here -->
     </div>
     <aside class="sidebar">
       <h2>Menu</h2>
-      <p>Kontrolki / GUI</p>
+      <div>
+        <button class="btn btn-primary" (click)="fileInput.click()">Wczytaj model</button>
+        <input
+          #fileInput
+          type="file"
+          (change)="onFileSelected($event)"
+          accept=".glb,.gltf"
+          hidden
+        />
+      </div>
     </aside>
   </main>
   <footer class="footer">
