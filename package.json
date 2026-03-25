@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:3D-Demo": "node dist/3D-Demo/server/server.mjs"
+    "serve:ssr:3D-Demo": "node dist/3D-Demo/server/server.mjs",
+    "lint": "ng lint"
   },
   "prettier": {
     "printWidth": 100,
@@ -33,6 +34,7 @@
     "@angular/ssr": "^20.3.3",
     "express": "^5.1.0",
     "rxjs": "~7.8.0",
+    "three": "^0.183.2",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
@@ -42,12 +44,16 @@
     "@types/express": "^5.0.1",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^20.17.19",
+    "@types/three": "^0.183.1",
+    "angular-eslint": "21.0.1",
+    "eslint": "^9.39.1",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "typescript-eslint": "8.46.4"
   }
 }
