@@ -32,8 +32,6 @@
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",
-            "outputPath": "dist/my-app",
-            "baseHref": "/",
             "ssr": {
               "entry": "src/server.ts"
             }
