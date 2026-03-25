@@ -29,6 +29,7 @@ export class App implements AfterViewInit {
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.initThree();
+      this.loadInitialModel();
       this.animate();
     }
   }
@@ -107,11 +108,6 @@ export class App implements AfterViewInit {
     this.controls.enableZoom = true;
     this.controls.minDistance = 1;
     this.controls.maxDistance = 100;
-
-    const geometry: THREE.BoxGeometry = new THREE.BoxGeometry();
-    const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
-    const cube: THREE.Mesh = new THREE.Mesh(geometry, material);
-    this.scene.add(cube);
   }
 
   private animate = () => {
@@ -119,4 +115,32 @@ export class App implements AfterViewInit {
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
   };
+
+  private loadInitialModel(): void {
+    const loader = new GLTFLoader();
+    const url = 'assets/model.glb';
+    loader.load(
+      url,
+      (gltf) => {
+        const model = gltf.scene;
+        this.clearScene();
+        this.scene.add(model);
+        const box = new THREE.Box3().setFromObject(model);
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        model.position.sub(center);
+        const maxDim = Math.max(size.x, size.y, size.z);
+        this.controls.target.set(0, 0, 0);
+        const distance = maxDim * 1.2;
+        this.camera.position.set(0, 0, distance);
+        this.controls.minDistance = maxDim * 0.3;
+        this.controls.maxDistance = maxDim * 10;
+        this.controls.update();
+      },
+      undefined,
+      (error) => {
+        console.error('Błąd ładowania modelu:', error);
+      }
+    );
+  }
 }
