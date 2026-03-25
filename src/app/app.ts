@@ -92,7 +92,7 @@ export class App implements AfterViewInit {
 
     this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     this.camera.position.z = 5;
-
+    this.scene.add(new THREE.AmbientLight(0xffffff, 1));
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setSize(width, height);
     container.appendChild(this.renderer.domElement);
